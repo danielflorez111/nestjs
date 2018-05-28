@@ -1,15 +1,36 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { CreateCatDto } from 'dtos/create-cat.dto';
+import { CatsService } from 'services/cats.service';
+import { Cat } from './../interfaces/cat.interface';
+
 
 @Controller('cats')
 export class CatsController {
 
-    @Get()
-    findAll() {
-        let name: string = 'Daniel';
-        let age: number = 25;
-        let email: string = 'danielflorez111@hotmail.com';
+    constructor(private readonly catsService: CatsService) { }
 
-        return { name, age, email };
+    @Post()
+    async create(@Body() createCatDto: CreateCatDto) {
+        this.catsService.create(createCatDto);
     }
 
+    @Get()
+    async findAll(): Promise<Cat[]> {
+        return this.catsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id) {
+        return `This action returns a #${id} cat`;
+    }
+
+    @Put(':id')
+    update(@Param('id') id, @Body() updateCatDto) {
+        return `This action updates a #${id} cat`;
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id) {
+        return `This action removes a #${id} cat`;
+    }
 }
